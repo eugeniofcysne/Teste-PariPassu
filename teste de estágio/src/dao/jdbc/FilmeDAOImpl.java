@@ -54,29 +54,12 @@ public class FilmeDAOImpl implements FilmeDAO {
 	}
 
 	@Override
-	public void edit(Connection conn, Filme filme) throws Exception {
+	public void edit(Connection conn, Integer idFilme, String novoNome) throws Exception {
 		
-		//pegando o ID do filme a ser alterado
-		Integer idFilme = this.getNextId(conn); 
-		Integer decisao=idFilme;
-		
-		while (decisao>= idFilme) {
-			Scanner scanner = new Scanner(System.in);
-			String texto = "Qual a idFilme que deseja alterar? Deve estar entre 1 e ";
-			texto=texto.concat(Integer.toString(idFilme-1));
-			texto=texto.concat("\n");		
-			System.out.println(texto);
-			decisao = scanner.nextInt();
-		}
-		//pegando o novo nome
-		Scanner scanner = new Scanner(System.in);
-
-		System.out.println("Digite o nome desejado: \n");
-		String nomeDesejado = scanner.nextLine();
 		
 		//motando a string sql
 		String sql = "update en_filme set nome = ('";
-		sql = sql.concat(nomeDesejado);
+		sql = sql.concat(novoNome);
 		sql = sql.concat("' where id_filme = ");	
 		sql = sql.concat(Integer.toString(idFilme));
 		
@@ -84,12 +67,18 @@ public class FilmeDAOImpl implements FilmeDAO {
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.execute();
         conn.commit();
-		
+  
 	}
 
 	@Override
 	public void delete(Connection conn, Integer idFilme) throws Exception {
-		// TODO Auto-generated method stub
+		
+		String sql = "delete from en_filme where id_filme = " ;
+		sql=sql.concat(Integer.toString(idFilme));
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.execute();
+        conn.commit();
 		
 	}
 

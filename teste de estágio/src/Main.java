@@ -6,6 +6,7 @@ import entidades.Filme;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 
 public class Main {
@@ -19,8 +20,8 @@ public class Main {
 
             //Demonstrar o funcionamento aqui
             ClienteDAO clienteDAO = new ClienteDAOImpl();
-
-
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
 
