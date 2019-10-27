@@ -100,6 +100,7 @@ public class FilmeDAOImpl implements FilmeDAO {
         ResultSet myRs = ps.executeQuery();
 
         if (!myRs.next()) {
+        	System.out.println("Erro, ID não encontrado.\n");
             return null;
         }
 

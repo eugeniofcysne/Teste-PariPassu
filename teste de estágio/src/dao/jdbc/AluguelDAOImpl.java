@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class AluguelDAOImpl implements AluguelDAO {
@@ -116,7 +117,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 		Integer idAluguel = aluguel.getIdAluguel();
 
 		//apagando da tabela de relação
-		String sqlDeleteReAluguel = "delete from en_re_aluguel_filme where id_aluguel = ";
+		String sqlDeleteReAluguel = "delete from re_aluguel_filme where id_aluguel = ";
 		sqlDeleteReAluguel=sqlDeleteReAluguel.concat(Integer.toString(idAluguel));
         PreparedStatement DeleteRe = conn.prepareStatement(sqlDeleteReAluguel);
         DeleteRe.execute();
@@ -126,29 +127,92 @@ public class AluguelDAOImpl implements AluguelDAO {
         this.insereReAluguel(conn, idAluguel);
 
         conn.commit();
-		
-		
+				
 	}
 
 	@Override
 	public void delete(Connection conn, Aluguel aluguel) throws Exception {
 		Integer idAluguel = aluguel.getIdAluguel();
 
-		String deleteReAluguel = "delete from en_re_aluguel_filme where id_aluguel = ";
-		deleteReAluguel = deleteReAluguel.concat(Integer.toString(idAluguel));
-
+		String sqlDeleteReAluguel = "delete from en_re_aluguel_filme where id_aluguel = ";
+		sqlDeleteReAluguel = sqlDeleteReAluguel.concat(Integer.toString(idAluguel));
+        PreparedStatement DeleteRe = conn.prepareStatement(sqlDeleteReAluguel);
+        DeleteRe.execute();
+        conn.commit();
 	}
 
 	@Override
 	public Aluguel find(Connection conn, Integer idAluguel) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		//montando a string sql
+		String sql = "select a.id_cliente, a.id_aluguel, a.data_aluguel, a.valor, b.nome  from en_aluguel a, en_cliente b where a.id_aluguel = b.id_aluguel and a.id_aluguel = ";
+		sql=sql.concat(Integer.toString(idAluguel));
+	    PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet myRs = ps.executeQuery();
+
+        if (!myRs.next()) {
+            return null;
+        }else {
+
+	        Integer idCliente = myRs.getInt("a.id_cliente");
+	        String nome = myRs.getString("b.nome");
+	        Cliente cliente = new Cliente(idCliente, nome);
+	        
+	        Date dataAluguel = myRs.getDate("a.data_aluguel");
+	        Float valor=myRs.getFloat("a.valor");                  
+	        List<Filme> filmes = filmesDoAluguel(conn, idAluguel);     
+               
+	        return new Aluguel(idAluguel,filmes,cliente,dataAluguel,valor);
+	        
+        }
 	}
 
 	@Override
 	public Collection<Aluguel> list(Connection conn) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String sql = "select * from en_aluguel";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet resultLista = ps.executeQuery();
+
+        Collection<Aluguel> items = new ArrayList<>();
+
+        while (resultLista.next()) {
+            Integer idAluguel = resultLista.getInt("id_aluguel");
+            Integer idCliente = resultLista.getInt("id_cliente");
+            Date dataAluguel = resultLista.getDate("data_aluguel");
+            Float valor = resultLista.getFloat("valor");
+            
+            String sqlPegaNomeCliente="select b.nome from en_aluguel a, en_cliente b where a.id_cliente=b.id_cliente and a.id_aluguel =  ";
+            sqlPegaNomeCliente=sqlPegaNomeCliente.concat((Integer.toString(idAluguel)));
+            PreparedStatement pegaNomeCliente=conn.prepareStatement(sqlPegaNomeCliente);
+	        ResultSet resultNomeCliente = pegaNomeCliente.executeQuery();
+	        String nome=null;
+	        while(resultNomeCliente.next()) {
+	        	nome=resultNomeCliente.getString("b.nome");
+	        }
+            Cliente cliente = new Cliente(idCliente, nome);
+            items.add(new Aluguel(idAluguel, filmesDoAluguel(conn, idAluguel),cliente,dataAluguel,valor));
+        }
+
+        return items;
 	}
 
+	
+	public List<Filme> filmesDoAluguel(Connection conn, Integer idAluguel) throws Exception{// método criado para economizar código, este bloco aparece mais de 1x
+		String sqlPegaFilmes="select * from re_aluguel_filme where id_aluguel = ";
+        sqlPegaFilmes=sqlPegaFilmes.concat((Integer.toString(idAluguel)));
+        PreparedStatement pegaFilmes=conn.prepareStatement(sqlPegaFilmes);
+        ResultSet filmesDoAluguel = pegaFilmes.executeQuery();
+        
+        List<Filme> filmes = new ArrayList<>();
+
+        while (filmesDoAluguel.next()) {
+            Integer idFilme = filmesDoAluguel.getInt("id_filme");
+            String nomeFilme = filmesDoAluguel.getString("nome");
+            Date dataLancamento = filmesDoAluguel.getDate("data_lancamento");
+            String descricao=filmesDoAluguel.getString("descricao");
+
+            filmes.add(new Filme(idFilme, dataLancamento,nomeFilme,descricao));
+        }
+        return filmes;
+	}
 }
