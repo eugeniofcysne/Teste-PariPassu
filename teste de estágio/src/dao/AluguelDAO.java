@@ -19,4 +19,6 @@ public interface AluguelDAO {
 
     Collection<Aluguel> list(Connection conn) throws Exception;
 
+	void insereReAluguel(Connection conn, Integer idAluguel) throws Exception; //novo método criado para economizar reutilização de código
+
 }

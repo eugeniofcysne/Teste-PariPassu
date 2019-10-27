@@ -11,7 +11,7 @@ public interface FilmeDAO {
 
     Integer getNextId(Connection conn) throws Exception;
 
-    void edit(Connection conn, Filme filme) throws Exception;
+    void edit(Connection conn, Integer idFilme, String novoNome) throws Exception;
 
     void delete(Connection conn, Integer idFilme) throws Exception;
 
