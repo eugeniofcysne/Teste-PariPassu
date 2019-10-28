@@ -71,40 +71,40 @@ public class Main {
                 		Integer contaFilmes = 1;
                 		Integer idFilme=null;
                 		List<Filme> listaFilmesAluguel = new ArrayList<>();
-                		while (outrosFilmes == false) {
-                			
-                			System.out.println("Digita o id do filme "+ Integer.toString(contaFilmes)+" :");
-                    		scannerAluguel1 = new Scanner(System.in);
-                    		idFilme=scannerAluguel1.nextInt();
-                    		
-                    		Filme filme = FilmeDAOImpl.find(conn, idFilme); //ERROOOOO mudar método para Static?!?!
-                    		
-                    		
-		                    		//gerando a lista de filmes sem usar a função find
-		                    		String sql = "select * from en_filme where id_filme = ";
-		                    		sql=sql.concat(Integer.toString(idFilme));
-		                    		PreparedStatement ps = conn.prepareStatement(sql);
-		                            ResultSet myRs = ps.executeQuery();
-		                            String nome = myRs.getString("nome");
-		                            Date dataLancamento = myRs.getDate("dataLancamento");
-		                            String descricao=myRs.getString("descricao");
-		                            
-                    		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao)); //listaFilmesAluguel.add(filme)
-                    		
-                    		System.out.println("Deseja incluir novo filme? 's' para SIM, qualquer outra coisa para NÃO.");
-                    		scannerAluguel1 = new Scanner(System.in);
-                    		if(scannerAluguel1.next()=="s") {
-                    			contaFilmes++;
-                    		}else {
-                    			outrosFilmes = true;
-                    		}
-                    		
-                		}
+                		//passando lista vazia e inserindo os filmes da relação dentro do método reInsereAluguel
+//                		while (outrosFilmes == false) {
+//                			
+//                			System.out.println("Digita o id do filme "+ Integer.toString(contaFilmes)+" :");
+//                    		scannerAluguel1 = new Scanner(System.in);
+//                    		idFilme=scannerAluguel1.nextInt();
+//                    		
+//                    		Filme filme = FilmeDAOImpl.find(conn, idFilme); //ERROOOOO mudar método para Static?!?!
+//                    		
+//                    		
+//		                    		//gerando a lista de filmes sem usar a função find
+//		                    		String sql = "select * from en_filme where id_filme = ";
+//		                    		sql=sql.concat(Integer.toString(idFilme));
+//		                    		PreparedStatement ps = conn.prepareStatement(sql);
+//		                            ResultSet myRs = ps.executeQuery();
+//		                            String nome = myRs.getString("nome");
+//		                            Date dataLancamento = myRs.getDate("dataLancamento");
+//		                            String descricao=myRs.getString("descricao");
+//		                            
+//                    		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao)); //listaFilmesAluguel.add(filme)
+//                    		
+//                    		System.out.println("Deseja incluir novo filme? 's' para SIM, qualquer outra coisa para NÃO.");
+//                    		scannerAluguel1 = new Scanner(System.in);
+//                    		if(scannerAluguel1.next()=="s") {
+//                    			contaFilmes++;
+//                    		}else {
+//                    			outrosFilmes = true;
+//                    		}
+//                    		
+//                		}
                 		
                 		scannerAluguel1 = new Scanner(System.in);
                 		System.out.println("Digita o valor total do aluguel: ");
-                   		Float valor = scannerAluguel1.nextFloat();
-                   		
+                   		Float valor = scannerAluguel1.nextFloat();                   		
                    		
                    		Integer nextId = AluguelDAOImpl.getNextId(conn); //ERROOOOOO mudar método para STATIC?!?!
                 		
@@ -112,16 +112,46 @@ public class Main {
                 		
                 		AluguelDAOImpl.insert(conn, aluguel); //ERROOOOOO mudar método para STATIC?!?!
                 		
+                		//reconstruir aluguel com a lista de filmes completa gerada no método reInsereAluguel
                 		
+                		aluguel = AluguelDAOImpl.find(conn, idAluguel);//ERROOOOOO mudar método para STATIC?!?!
                 		
                     	break;
-                    case 2:
+                    case 2://excluir
+                    	System.out.println("Excluindo aluguel. \n");
+                    	
+                    	Scanner scannerAluguel2 = new Scanner(System.in);
+                    	System.out.println("Digite o id do aluguel que quer excluir: ");
+                    	
+                    	Integer idAluguel2 = scannerAluguel2.nextInt();
+                    	Aluguel aluguel2 = AluguelDAOImpl.find(conn, idAluguel2);//ERROOOOOO mudar método para STATIC?!?!
+                    	
+                    	AluguelDAOImpl.delete(conn, aluguel2);//ERROOOOOO mudar método para STATIC?!?!
+                    	
                     	break;
-                    case 3:
+                    case 3://editar
+                    	System.out.println("Editando aluguel. \n");
+                    	
+                    	Scanner scannerAluguel3 = new Scanner(System.in);
+                    	System.out.println("Digite o id do aluguel que quer excluir: ");
+                    	Integer idAluguel3 = scannerAluguel3.nextInt();
+                    	Aluguel aluguel3 = AluguelDAOImpl.find(conn, idAluguel3);//ERROOOOOO mudar método para STATIC?!?!
+                    	
+                    	AluguelDAOImpl.edit(conn, aluguel3);//ERROOOOOO mudar método para STATIC?!?!
+                    	
+                    	
                     	break;
-                    case 4:
+                    case 4://procurar
+                    	System.out.println("Procurando aluguel. \n");
+                    	
+                    	Scanner scannerAluguel4 = new Scanner(System.in);
+                    	System.out.println("Digite o id do aluguel que quer procurar: ");
+                    	Integer idAluguel4 = scannerAluguel4.nextInt();
+                    	Aluguel aluguel4 = AluguelDAOImpl.find(conn, idAluguel4);//ERROOOOOO mudar método para STATIC?!?!
+                    	
+                    	
                     	break;
-                    case 5:
+                    case 5://listar
                     	break;
                 	default:
                     }

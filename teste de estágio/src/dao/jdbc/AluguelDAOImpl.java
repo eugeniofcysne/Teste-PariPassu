@@ -112,7 +112,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 	}
 
 	@Override
-	public void edit(Connection conn, Aluguel aluguel) throws Exception {
+	public void edit(Connection conn, Aluguel aluguel) throws Exception { //obs.: método para editar (refazer) a relação de filmes. para editar o aluguel inteiro, criar método que apague o aluguel e insira um novo
 
 		Integer idAluguel = aluguel.getIdAluguel();
 
@@ -136,9 +136,16 @@ public class AluguelDAOImpl implements AluguelDAO {
 
 		String sqlDeleteReAluguel = "delete from en_re_aluguel_filme where id_aluguel = ";
 		sqlDeleteReAluguel = sqlDeleteReAluguel.concat(Integer.toString(idAluguel));
-        PreparedStatement DeleteRe = conn.prepareStatement(sqlDeleteReAluguel);
-        DeleteRe.execute();
+        PreparedStatement deleteRe = conn.prepareStatement(sqlDeleteReAluguel);
+        deleteRe.execute();
+        
+        String sqlDeleteAluguel = "delete from en_aluguel where id_aluguel = ";
+        sqlDeleteAluguel = sqlDeleteAluguel.concat(Integer.toString(idAluguel));
+        PreparedStatement deleteAluguel = conn.prepareStatement(sqlDeleteAluguel);
+        deleteAluguel.execute();
         conn.commit();
+        
+        System.out.println("Aluguel id "+ Integer.toString(idAluguel) + " exluído com sucesso. \n");
 	}
 
 	@Override
