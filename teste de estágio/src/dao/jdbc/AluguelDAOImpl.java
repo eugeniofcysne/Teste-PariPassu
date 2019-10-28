@@ -196,6 +196,26 @@ public class AluguelDAOImpl implements AluguelDAO {
         return items;
 	}
 
+	@Override
+	public Collection<Filme> criaListaAluguel(Connection conn, Integer idFilme[]) throws Exception {
+		
+		Collection<Filme> items = new ArrayList<>();
+		
+		for(Integer i = 0; i<idFilme.length;i++) {
+			
+			String sql = "select * from en_filme where id_filme = ";
+			sql=sql.concat(Integer.toString(idFilme[i]));
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet myRs = ps.executeQuery();
+			
+			String nomeFilme = myRs.getString("nome");
+            Date dataLancamento = myRs.getDate("data_lancamento");
+            String descricao=myRs.getString("descricao");
+
+            items.add(new Filme(idFilme[i], dataLancamento,nomeFilme,descricao));
+		}
+		return items;
+	}
 	
 	public List<Filme> filmesDoAluguel(Connection conn, Integer idAluguel) throws Exception{// método criado para economizar código, este bloco aparece mais de 1x
 		String sqlPegaFilmes="select * from re_aluguel_filme where id_aluguel = ";

@@ -1,6 +1,7 @@
 package dao;
 
 import entidades.Aluguel;
+import entidades.Filme;
 
 import java.sql.Connection;
 import java.util.Collection;
@@ -14,6 +15,8 @@ public interface AluguelDAO {
     void edit(Connection conn, Aluguel aluguel) throws Exception;
 
     void delete(Connection conn, Aluguel aluguel) throws Exception;
+    
+    Collection<Filme> criaListaAluguel(Connection conn, Integer idFilme[]) throws Exception;
 
     Aluguel find(Connection conn, Integer idAluguel) throws Exception;
 
