@@ -28,8 +28,6 @@ public class Main {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/mydb", "postgres", "123456");
             conn.setAutoCommit(false);
-
-            //Demonstrar o funcionamento aqui
             
             Boolean teste = false;
             
@@ -59,7 +57,7 @@ public class Main {
                 		System.out.println("Digita o id do cliente: ");
                 		Integer idCliente = scannerAluguel1.nextInt();
                 		
-                		Cliente cliente = ClienteDAOImpl.find(conn, idCliente);//ERROOOOO mudar método para Static?!?!
+                		Cliente cliente = clienteDAO.find(conn, idCliente);//ERROOOOO mudar método para Static?!?!
                 		
                 		scannerAluguel1 = new Scanner(System.in);
                 		System.out.println("Digita a data do aluguel, no formato DD/MM/YYYY: ");
@@ -106,15 +104,15 @@ public class Main {
                 		System.out.println("Digita o valor total do aluguel: ");
                    		Float valor = scannerAluguel1.nextFloat();                   		
                    		
-                   		Integer nextId = AluguelDAOImpl.getNextId(conn); //ERROOOOOO mudar método para STATIC?!?!
+                   		Integer nextId = aluguelDAO.getNextId(conn); //ERROOOOOO mudar método para STATIC?!?!
                 		
                 		Aluguel aluguel = new Aluguel(nextId, listaFilmesAluguel, cliente, dataAluguel, valor);
                 		
-                		AluguelDAOImpl.insert(conn, aluguel); //ERROOOOOO mudar método para STATIC?!?!
+                		aluguelDAO.insert(conn, aluguel); //ERROOOOOO mudar método para STATIC?!?!
                 		
                 		//reconstruir aluguel com a lista de filmes completa gerada no método reInsereAluguel
                 		
-                		aluguel = AluguelDAOImpl.find(conn, idAluguel);//ERROOOOOO mudar método para STATIC?!?!
+                		aluguel = aluguelDAO.find(conn, nextId);//ERROOOOOO mudar método para STATIC?!?!
                 		
                     	break;
                     case 2://excluir
@@ -124,9 +122,9 @@ public class Main {
                     	System.out.println("Digite o id do aluguel que quer excluir: ");
                     	
                     	Integer idAluguel2 = scannerAluguel2.nextInt();
-                    	Aluguel aluguel2 = AluguelDAOImpl.find(conn, idAluguel2);//ERROOOOOO mudar método para STATIC?!?!
+                    	Aluguel aluguel2 = aluguelDAO.find(conn, idAluguel2);//ERROOOOOO mudar método para STATIC?!?!
                     	
-                    	AluguelDAOImpl.delete(conn, aluguel2);//ERROOOOOO mudar método para STATIC?!?!
+                    	aluguelDAO.delete(conn, aluguel2);//ERROOOOOO mudar método para STATIC?!?!
                     	
                     	break;
                     case 3://editar
@@ -135,9 +133,9 @@ public class Main {
                     	Scanner scannerAluguel3 = new Scanner(System.in);
                     	System.out.println("Digite o id do aluguel que quer excluir: ");
                     	Integer idAluguel3 = scannerAluguel3.nextInt();
-                    	Aluguel aluguel3 = AluguelDAOImpl.find(conn, idAluguel3);//ERROOOOOO mudar método para STATIC?!?!
+                    	Aluguel aluguel3 = aluguelDAO.find(conn, idAluguel3);//ERROOOOOO mudar método para STATIC?!?!
                     	
-                    	AluguelDAOImpl.edit(conn, aluguel3);//ERROOOOOO mudar método para STATIC?!?!
+                    	aluguelDAO.edit(conn, aluguel3);//ERROOOOOO mudar método para STATIC?!?!
                     	
                     	
                     	break;
@@ -147,7 +145,10 @@ public class Main {
                     	Scanner scannerAluguel4 = new Scanner(System.in);
                     	System.out.println("Digite o id do aluguel que quer procurar: ");
                     	Integer idAluguel4 = scannerAluguel4.nextInt();
-                    	Aluguel aluguel4 = AluguelDAOImpl.find(conn, idAluguel4);//ERROOOOOO mudar método para STATIC?!?!
+                    	Aluguel aluguel4 = aluguelDAO.find(conn, idAluguel4);//ERROOOOOO mudar método para STATIC?!?!
+                    	System.out.println("\nID do aluguel: "+Integer.toString(aluguel4.getIdAluguel())+ " \n");
+                    	List<Filme> filmes = aluguel4.getFilmes();
+                    	System.out.println(filmes);//verificar impressão de list
                     	
                     	
                     	break;
