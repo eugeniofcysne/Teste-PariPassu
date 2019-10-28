@@ -4,6 +4,7 @@ import dao.FilmeDAO;
 import dao.jdbc.AluguelDAOImpl;
 import dao.jdbc.ClienteDAOImpl;
 import dao.jdbc.FilmeDAOImpl;
+import entidades.Aluguel;
 import entidades.Cliente;
 import entidades.Filme;
 
@@ -52,9 +53,13 @@ public class Main {
                     Integer decisaoAluguel=scannerAluguel.nextInt();
                     switch(decisaoAluguel) {
                     case 1:
+                    	System.out.println("Inserindo novo aluguel. \n");
+                    	
                 		Scanner scannerAluguel1 = new Scanner(System.in);
                 		System.out.println("Digita o id do cliente: ");
                 		Integer idCliente = scannerAluguel1.nextInt();
+                		
+                		Cliente cliente = ClienteDAOImpl.find(conn, idCliente);//ERROOOOO mudar método para Static?!?!
                 		
                 		scannerAluguel1 = new Scanner(System.in);
                 		System.out.println("Digita a data do aluguel, no formato DD/MM/YYYY: ");
@@ -75,15 +80,15 @@ public class Main {
                     		Filme filme = FilmeDAOImpl.find(conn, idFilme); //ERROOOOO mudar método para Static?!?!
                     		
                     		
-                    		//gerando a lista de filmes sem usar a função find
-                    		String sql = "select * from en_filme where id_filme = ";
-                    		sql=sql.concat(Integer.toString(idFilme));
-                    		PreparedStatement ps = conn.prepareStatement(sql);
-                            ResultSet myRs = ps.executeQuery();
-                            String nome = myRs.getString("nome");
-                            Date dataLancamento = myRs.getDate("dataLancamento");
-                            String descricao=myRs.getString("descricao");
-                            
+		                    		//gerando a lista de filmes sem usar a função find
+		                    		String sql = "select * from en_filme where id_filme = ";
+		                    		sql=sql.concat(Integer.toString(idFilme));
+		                    		PreparedStatement ps = conn.prepareStatement(sql);
+		                            ResultSet myRs = ps.executeQuery();
+		                            String nome = myRs.getString("nome");
+		                            Date dataLancamento = myRs.getDate("dataLancamento");
+		                            String descricao=myRs.getString("descricao");
+		                            
                     		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao)); //listaFilmesAluguel.add(filme)
                     		
                     		System.out.println("Deseja incluir novo filme? 's' para SIM, qualquer outra coisa para NÃO.");
@@ -103,9 +108,9 @@ public class Main {
                    		
                    		Integer nextId = AluguelDAOImpl.getNextId(conn); //ERROOOOOO mudar método para STATIC?!?!
                 		
+                		Aluguel aluguel = new Aluguel(nextId, listaFilmesAluguel, cliente, dataAluguel, valor);
                 		
-                		
-                		
+                		AluguelDAOImpl.insert(conn, aluguel); //ERROOOOOO mudar método para STATIC?!?!
                 		
                 		
                 		
