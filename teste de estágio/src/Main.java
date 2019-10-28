@@ -71,6 +71,11 @@ public class Main {
                 			System.out.println("Digita o id do filme "+ Integer.toString(contaFilmes)+" :");
                     		scannerAluguel1 = new Scanner(System.in);
                     		idFilme=scannerAluguel1.nextInt();
+                    		
+                    		Filme filme = FilmeDAOImpl.find(conn, idFilme); //ERROOOOO mudar método para Static?!?!
+                    		
+                    		
+                    		//gerando a lista de filmes sem usar a função find
                     		String sql = "select * from en_filme where id_filme = ";
                     		sql=sql.concat(Integer.toString(idFilme));
                     		PreparedStatement ps = conn.prepareStatement(sql);
@@ -78,7 +83,9 @@ public class Main {
                             String nome = myRs.getString("nome");
                             Date dataLancamento = myRs.getDate("dataLancamento");
                             String descricao=myRs.getString("descricao");
-                    		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao));
+                            
+                    		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao)); //listaFilmesAluguel.add(filme)
+                    		
                     		System.out.println("Deseja incluir novo filme? 's' para SIM, qualquer outra coisa para NÃO.");
                     		scannerAluguel1 = new Scanner(System.in);
                     		if(scannerAluguel1.next()=="s") {
@@ -94,7 +101,7 @@ public class Main {
                    		Float valor = scannerAluguel1.nextFloat();
                    		
                    		
-                   		Integer nextId = AluguelDAOImpl.getNextId(conn);
+                   		Integer nextId = AluguelDAOImpl.getNextId(conn); //ERROOOOOO mudar método para STATIC?!?!
                 		
                 		
                 		

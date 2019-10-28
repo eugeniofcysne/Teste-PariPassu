@@ -101,7 +101,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 			}
 			contadorDeFilmes++;
 			Scanner scanner2 = new Scanner(System.in);
-			System.out.println("Deseja inserir no filme? digite s para sim, ou qualquer outra coisa para não");
+			System.out.println("Deseja inserir novo filme? digite s para sim, ou qualquer outra coisa para não");
 			if (scanner2.next() == "s" || scanner2.next() == "S") {
 				System.out.println("Ok! Nova inserção. \n");
 			} else {
