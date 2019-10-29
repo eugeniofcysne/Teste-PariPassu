@@ -1,0 +1,4 @@
+1) Não desenvolvida a parte do Cliente na aplicação / Main, pois não foi solicitado no teste.
+2) Não realizado tratamento de erros para entradas de insert no banco, por exemplo Data de Lançamento (dd/mm/yyyy) e valor (float).
+3) Foram criados alguns métodos nas classes para evitar repetição de código (por exemplo insereReAluguel e criaListaAluguel na classe AluguelDAO, e os métodos toString no Aluguel e no Filme)
+4) Foi alterado o método list de Collection<Filme> para Collection<Aluguel> na classe AluguelDAO

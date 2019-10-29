@@ -1,7 +1,7 @@
-Seu nome:
+Seu nome: Eugênio Fiorelli Cysne
 
-1)
+1) select id_filme, MAX(data_lancamento) as data_lancamento, nome,  descricao from en_filme group by id_filme;
 
-2)
+2) select a.id_cliente as id_cliente, b.nome as nome, count(a.id_cliente) as alugueis from en_aluguel a, en_cliente b where a.id_cliente = b.id_cliente; 
 
-3)
+3) 

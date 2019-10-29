@@ -7,10 +7,12 @@ import entidades.Filme;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Scanner;
 
 
 public class FilmeDAOImpl implements FilmeDAO {
@@ -19,9 +21,8 @@ public class FilmeDAOImpl implements FilmeDAO {
 	public void insert(Connection conn, Filme filme) throws Exception {
 		
 		//conversão da data
-		SimpleDateFormat in= new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat out = new SimpleDateFormat("dd/MM/yyyy");		 
-		String dataFormatada = out.format(in.parse(filme.getDataLancamento().toString()));
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dataFormatada = dateFormat.format(filme.getDataLancamento());
 		
 		//pega proximo id filme
 		
@@ -55,14 +56,28 @@ public class FilmeDAOImpl implements FilmeDAO {
 	}
 
 	@Override
-	public void edit(Connection conn, Integer idFilme, String novoNome) throws Exception {
+	public void edit(Connection conn, Integer idFilme) throws Exception {
 		
 		
 		//montando a string sql
+
+		
+		Scanner scannerNome = new Scanner(System.in);
+		System.out.println("Digita o novo nome do filme: ");
+		String novoNome = scannerNome.next();
+		
+		Scanner scannerData = new Scanner(System.in);
+		System.out.println("Digita a data do lançamento nova, no formato DD/MM/YYYY: ");
+		String novaData = scannerData.next();
+		
+		Scanner scannerDescricao = new Scanner(System.in);
+		System.out.println("Digita a nova descrição do filme: ");
+		String novaDescricao = scannerDescricao.next();
+		
+		//montando a string do update
 		String sql = "update en_filme set nome = '";
-		sql = sql.concat(novoNome);
-		sql = sql.concat("' where id_filme = ");	
-		sql = sql.concat(Integer.toString(idFilme));
+		sql = sql.concat(novoNome).concat("', set descricao = '").concat(novaDescricao).concat("', set data_lancamento = '");
+		sql=sql.concat(novaData).concat("' where id_filme = ").concat(Integer.toString(idFilme));
 		
 		//fazendo o update
         PreparedStatement ps = conn.prepareStatement(sql);

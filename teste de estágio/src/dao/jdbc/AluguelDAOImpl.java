@@ -26,7 +26,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 		
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dataFormatada = dateFormat.format(aluguel.getDataAluguel());
-		System.out.println("\naqui data "+dataFormatada);
+
 		// pega proximo id aluguel
 
 		Integer idAluguel = this.getNextId(conn);
@@ -205,6 +205,10 @@ public class AluguelDAOImpl implements AluguelDAO {
 
 	@Override
 	public Collection<Filme> criaListaAluguel(Connection conn, Integer idFilme[]) throws Exception {
+		
+		//método para criar uma Collection<Filme> com os filmes que constam naquele aluguel, 
+		//baseado em um vetor de inteiros com os ids de filme
+		
 		
 		Collection<Filme> items = new ArrayList<>();
 		

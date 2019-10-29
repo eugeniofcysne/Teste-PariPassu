@@ -36,7 +36,9 @@ public class Main {
 			ClienteDAO clienteDAO = new ClienteDAOImpl();
 			AluguelDAO aluguelDAO = new AluguelDAOImpl();
 			FilmeDAO filmeDAO = new FilmeDAOImpl();
-
+			
+			System.out.println("Olá, esta é a aplicação de teste do candidato Eugênio Fiorelli Cysne");
+			
 			while (teste == false) {
 				Scanner scanner1 = new Scanner(System.in);
 				System.out.println("digita 1 para alugueis ou 2 para filmes");
@@ -79,43 +81,6 @@ public class Main {
 							System.out.println(filme.toString());
 						}
 
-						// passando lista vazia e inserindo os filmes da relação dentro do método
-						// reInsereAluguel
-//                		
-//                		Boolean outrosFilmes = false;
-//                		Integer contaFilmes = 1;
-//                		Integer idFilme=null;
-//                		while (outrosFilmes == false) {
-//                			
-//                			System.out.println("Digita o id do filme "+ Integer.toString(contaFilmes)+" :");
-//                    		scannerAluguel1 = new Scanner(System.in);
-//                    		idFilme=scannerAluguel1.nextInt();
-//                    		
-//                    		Filme filme = FilmeDAOImpl.find(conn, idFilme); 
-
-//                    		
-//                    		
-//		                    		//gerando a lista de filmes sem usar a função find
-//		                    		String sql = "select * from en_filme where id_filme = ";
-//		                    		sql=sql.concat(Integer.toString(idFilme));
-//		                    		PreparedStatement ps = conn.prepareStatement(sql);
-//		                            ResultSet myRs = ps.executeQuery();
-//		                            String nome = myRs.getString("nome");
-//		                            Date dataLancamento = myRs.getDate("dataLancamento");
-//		                            String descricao=myRs.getString("descricao");
-//		                            
-//                    		listaFilmesAluguel.add(new Filme(idFilme, dataLancamento, nome, descricao)); //listaFilmesAluguel.add(filme)
-//                    		
-//                    		System.out.println("Deseja incluir novo filme? 's' para SIM, qualquer outra coisa para NÃO.");
-//                    		scannerAluguel1 = new Scanner(System.in);
-//                    		if(scannerAluguel1.next()=="s") {
-//                    			contaFilmes++;
-//                    		}else {
-//                    			outrosFilmes = true;
-//                    		}
-//                    		
-//                		}
-
 						Scanner scannerAluguel3 = new Scanner(System.in);
 						System.out.println("Digita o valor total do aluguel: ");
 						Float valor = scannerAluguel3.nextFloat();
@@ -126,8 +91,9 @@ public class Main {
 
 						aluguelDAO.insert(conn, aluguel); // aqui dentro é gerada a lista
 
-						aluguel = aluguelDAO.find(conn, nextId); // o aluguel é reconstruído com a lista de filmes. no
-																	// momento não é usada para nada esta linha
+						// na próx. linha o aluguel é reconstruído com a lista de filmes. no momento não
+						// é usada para nada esta linha
+						aluguel = aluguelDAO.find(conn, nextId);
 
 						break;
 					case 2:// excluir
@@ -162,12 +128,12 @@ public class Main {
 						aluguel4.toString();
 						break;
 					case 5:// listar
-						Collection<Aluguel> aluguelCompleto =aluguelDAO.list(conn);
+						Collection<Aluguel> aluguelCompleto = aluguelDAO.list(conn);
 						System.out.println("Imprimindo lista completa de aluguéis. \n");
 						for (Aluguel aluguelTemp : aluguelCompleto) {
 							System.out.println(aluguelTemp.toString());
 						}
-						
+
 						break;
 					default:
 					}
@@ -182,31 +148,65 @@ public class Main {
 					System.out.println("Digita 5 para listar todos os filmes. \n");
 					Integer decisaoFilme = scannerFilme.nextInt();
 					switch (decisaoFilme) {
-					case 1:
+					case 1://inserir
 						System.out.println("Inserindo novo filme. \n");
 
+						Integer idFilme = filmeDAO.getNextId(conn);
+
 						Scanner scannerFilme1 = new Scanner(System.in);
-						System.out.println("Digita o id do filme novo: ");
-						Integer idFilme = scannerFilme1.nextInt();
-
-
-						Scanner scannerFilme2 = new Scanner(System.in);
 						System.out.println("Digita a data do lançamento, no formato DD/MM/YYYY: ");
-						String dataFilmeString = scannerFilme2.next();
+						String dataFilmeString = scannerFilme1.next();
 						SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
 						Date dataFilme = formatoData.parse(dataFilmeString);
 
-						Filme filmeTeste = new Filme(1, dataFilme, "nomedofilme", "descricaodofilme");
+						Scanner scannerFilme2 = new Scanner(System.in);
+						System.out.println("Digita o nome do filme: ");
+						String nomeFilme = scannerFilme2.next();
 
+						Scanner scannerFilme3 = new Scanner(System.in);
+						System.out.println("Digita a descrição do filme: ");
+						String descricaoFilme = scannerFilme3.next();
+
+						Filme novoFilme = new Filme(idFilme, dataFilme, nomeFilme, descricaoFilme);
+
+						filmeDAO.insert(conn, novoFilme);
 
 						break;
 					case 2:// excluir
+						System.out.println("Excluindo filme. \n");
+
+						Scanner scannerFilme4 = new Scanner(System.in);
+						System.out.println("Digite o id do filme que quer excluir: ");
+
+						Integer idFilme2 = scannerFilme4.nextInt();
+
+						filmeDAO.delete(conn, idFilme2);
+
 						break;
 					case 3:// editar
+						System.out.println("Editando filme. \n");
+
+						Scanner scannerFilme5 = new Scanner(System.in);
+						System.out.println("Digite o id do filme que quer editar: ");
+						Integer idFilme3 = scannerFilme5.nextInt();
+
+						filmeDAO.edit(conn, idFilme3);
 						break;
 					case 4:// procurar
+						System.out.println("Procurando filme. \n");
+						Scanner scannerFilme6 = new Scanner(System.in);
+						System.out.println("Digite o id do filme que quer procurar: ");
+						Integer idFilme4 = scannerFilme6.nextInt();
+						Filme filme4 = filmeDAO.find(conn, idFilme4);
+						filme4.toString();
 						break;
 					case 5:// listar
+						Collection<Filme> filmeCompleto = filmeDAO.list(conn);
+						System.out.println("Imprimindo lista completa de filmes. \n");
+						for (Filme filmeTemp : filmeCompleto) {
+							System.out.println(filmeTemp.toString());
+						}
+
 						break;
 					default:
 						System.out.println("Valor inválido. \n");
@@ -214,6 +214,12 @@ public class Main {
 					break;
 				default:
 					System.out.println("Valor inválido. \n");
+				}
+				Scanner scannerTeste = new Scanner(System.in);
+				System.out.println("Deseja executar novamente? 's' para sim, qualquer outra coisa para não: ");
+				String verifTeste = scannerTeste.next();
+				if (verifTeste != "s") {
+					teste = true;
 				}
 			}
 
