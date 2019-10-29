@@ -12,12 +12,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -73,13 +69,13 @@ public class Main {
 						List<Filme> filmesAluguel = new ArrayList<>();
 						filmesAluguel.add(filmeTeste);
 
-						String testeString = "\n aqui teste" + dataAluguelString + "\n";
-						System.out.println(testeString);
-
-						// print de teste. remover depois!
-						for (Filme filme : filmesAluguel) {
-							System.out.println(filme.toString());
-						}
+//						String testeString = "\n aqui teste" + dataAluguelString + "\n";
+//						System.out.println(testeString);
+//
+//						// print de teste. remover depois!
+//						for (Filme filme : filmesAluguel) {
+//							System.out.println(filme.toString());
+//						}
 
 						Scanner scannerAluguel3 = new Scanner(System.in);
 						System.out.println("Digita o valor total do aluguel: ");

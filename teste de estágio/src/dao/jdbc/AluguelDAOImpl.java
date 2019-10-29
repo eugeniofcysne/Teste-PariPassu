@@ -37,14 +37,14 @@ public class AluguelDAOImpl implements AluguelDAO {
 
 		String sql = "INSERT INTO en_aluguel (id_aluguel,id_cliente, data_aluguel,valor) VALUES (";
 		sql = sql.concat(Integer.toString(idAluguel));
-		sql = sql.concat(",'");
+		sql = sql.concat(",");
 		sql = sql.concat(Integer.toString(idCliente));
 		sql = sql.concat(",'");
 		sql = sql.concat(dataFormatada);
-		sql = sql.concat("','");
+		sql = sql.concat("',");
 		sql = sql.concat(Float.toString(aluguel.getValor()));
-		sql = sql.concat("');");
-
+		sql = sql.concat(");");
+		System.out.println(sql);
 		// Prepara a instrução SQL
 
 		PreparedStatement ps = conn.prepareStatement(sql);
@@ -85,6 +85,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 			Integer idFilme = scanner.nextInt();
 			String verificaIdFilme = "select * from en_filme where id_filme = ";
 			verificaIdFilme = verificaIdFilme.concat(Integer.toString(idFilme));
+			System.out.println(verificaIdFilme);
 			PreparedStatement verificaIdF = conn.prepareStatement(verificaIdFilme);
 			ResultSet myRs = verificaIdF.executeQuery();
 			if (!myRs.next()) {
@@ -94,15 +95,16 @@ public class AluguelDAOImpl implements AluguelDAO {
 				String inserirFilmeNaRelacao = "INSERT INTO re_aluguel_filme (id_filme, id_aluguel) VALUES (";
 				inserirFilmeNaRelacao = inserirFilmeNaRelacao.concat(Integer.toString(idFilme));
 				inserirFilmeNaRelacao = inserirFilmeNaRelacao.concat(", ");
-				inserirFilmeNaRelacao = inserirFilmeNaRelacao.concat(Integer.toString(idAluguel));
+				inserirFilmeNaRelacao = inserirFilmeNaRelacao.concat(Integer.toString(idAluguel)).concat(")");
 				PreparedStatement InserirFNaR = conn.prepareStatement(inserirFilmeNaRelacao);
+				System.out.println("\n"+inserirFilmeNaRelacao);
 				InserirFNaR.execute();
 				conn.commit();
 			}
 			contadorDeFilmes++;
 			Scanner scanner2 = new Scanner(System.in);
-			System.out.println("Deseja inserir novo filme? digite s para sim, ou qualquer outra coisa para não");
-			if (scanner2.next() == "s" || scanner2.next() == "S") {
+			System.out.println("Deseja inserir novo filme? digite 0 para sim, ou qualquer outra coisa para não");
+			if (scanner2.nextInt() == 0) {
 				System.out.println("Ok! Nova inserção. \n");
 			} else {
 				System.out.println("Ok! Fim da inserção. \n");
@@ -151,8 +153,9 @@ public class AluguelDAOImpl implements AluguelDAO {
 	@Override
 	public Aluguel find(Connection conn, Integer idAluguel) throws Exception {
 		//montando a string sql
-		String sql = "select a.id_cliente, a.id_aluguel, a.data_aluguel, a.valor, b.nome  from en_aluguel a, en_cliente b where a.id_aluguel = b.id_aluguel and a.id_aluguel = ";
+		String sql = "select a.id_cliente, a.id_aluguel, a.data_aluguel, a.valor, b.nome  from en_aluguel a, en_cliente b where a.id_cliente = b.id_cliente and a.id_aluguel = ";
 		sql=sql.concat(Integer.toString(idAluguel));
+		System.out.println(sql);
 	    PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet myRs = ps.executeQuery();
 
@@ -160,12 +163,12 @@ public class AluguelDAOImpl implements AluguelDAO {
             return null;
         }else {
 
-	        Integer idCliente = myRs.getInt("a.id_cliente");
-	        String nome = myRs.getString("b.nome");
+	        Integer idCliente = myRs.getInt("id_cliente");
+	        String nome = myRs.getString("nome_cliente");
 	        Cliente cliente = new Cliente(idCliente, nome);
 	        
-	        Date dataAluguel = myRs.getDate("a.data_aluguel");
-	        Float valor=myRs.getFloat("a.valor");                  
+	        Date dataAluguel = myRs.getDate("data_aluguel");
+	        Float valor=myRs.getFloat("valor");                  
 	        List<Filme> filmes = filmesDoAluguel(conn, idAluguel);     
                
 	        return new Aluguel(idAluguel,filmes,cliente,dataAluguel,valor);
