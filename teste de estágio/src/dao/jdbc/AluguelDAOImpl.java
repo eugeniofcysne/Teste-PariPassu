@@ -9,6 +9,7 @@ import entidades.Aluguel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +23,10 @@ public class AluguelDAOImpl implements AluguelDAO {
 	public void insert(Connection conn, Aluguel aluguel) throws Exception {
 
 		// conversão da data
-
-		SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat out = new SimpleDateFormat("dd/MM/yyyy");
-		String dataFormatada = out.format(in.parse(aluguel.getDataAluguel().toString()));
-
+		
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dataFormatada = dateFormat.format(aluguel.getDataAluguel());
+		System.out.println("\naqui data "+dataFormatada);
 		// pega proximo id aluguel
 
 		Integer idAluguel = this.getNextId(conn);

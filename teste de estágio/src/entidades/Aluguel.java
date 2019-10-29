@@ -65,4 +65,16 @@ public class Aluguel {
         this.valor = valor;
         return this;
     }
+    
+    @Override
+    public String toString() {
+    	String montagemString="\nidAluguel: " + this.idAluguel + ", \nidCliente: " + this.cliente.getIdCliente() +
+                ", \nData Aluguel: " + this.dataAluguel + ", \nValor: " + this.valor +", \nLista de Filmes:";
+    	
+		for (Filme filme : this.filmes){
+			montagemString=montagemString.concat(filme.toString());
+		}
+    	return montagemString;
+    }
+    
 }

@@ -54,5 +54,14 @@ public class Filme {
         this.descricao = descricao;
         return this;
     }
+    
+    
+    @Override
+    public String toString() {
+    	return "\nidFilme: " + this.idFilme + ", \nData Lançamento: " + this.dataLancamento +
+                ", \nNome: " + this.nome + ", \ndescrição: " + this.descricao +
+                ", \n";
+    }
+    
 
 }
