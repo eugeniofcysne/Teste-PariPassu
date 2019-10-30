@@ -10,5 +10,5 @@ select a.id_cliente as id_cliente, b.nome as nome, count(a.id_cliente) as alugue
 select a.id_cliente, a.nome, count(*) as alugueis, sum(b.valor) as total_gasto, to_char(b.data_aluguel,'yyyy') as ano 
 from en_aluguel b, en_cliente a 
 where a.id_cliente = b.id_cliente 
-group by a.id_cliente, a.nome, b.data_aluguel
+group by a.id_cliente, a.nome, ano
 order by total_gasto desc;
