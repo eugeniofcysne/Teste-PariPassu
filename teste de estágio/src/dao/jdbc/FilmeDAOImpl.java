@@ -43,6 +43,8 @@ public class FilmeDAOImpl implements FilmeDAO {
 		//Executa a instrução SQL
 		ps.execute();
         conn.commit();
+        
+        System.out.println("\nFilme inserido com sucesso. \n");
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class FilmeDAOImpl implements FilmeDAO {
 		
 		Scanner scannerNome = new Scanner(System.in);
 		System.out.println("Digita o novo nome do filme: ");
-		String novoNome = scannerNome.next();
+		String novoNome = scannerNome.nextLine();
 		
 		Scanner scannerData = new Scanner(System.in);
 		System.out.println("Digita a data do lançamento nova, no formato DD/MM/YYYY: ");
@@ -76,13 +78,14 @@ public class FilmeDAOImpl implements FilmeDAO {
 		
 		//montando a string do update
 		String sql = "update en_filme set nome = '";
-		sql = sql.concat(novoNome).concat("', set descricao = '").concat(novaDescricao).concat("', set data_lancamento = '");
+		sql = sql.concat(novoNome).concat("', descricao = '").concat(novaDescricao).concat("', data_lancamento = '");
 		sql=sql.concat(novaData).concat("' where id_filme = ").concat(Integer.toString(idFilme));
-		
+	
 		//fazendo o update
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.execute();
         conn.commit();
+        System.out.println("\nAlteração realizada com sucesso.\n");
   
 	}
 
@@ -90,7 +93,7 @@ public class FilmeDAOImpl implements FilmeDAO {
 	public void delete(Connection conn, Integer idFilme) throws Exception {
 		
 		//apagando da tabela de relação
-		String sqlDeleteReAluguel = "delete from en_re_aluguel_filme where id_filme = ";
+		String sqlDeleteReAluguel = "delete from re_aluguel_filme where id_filme = ";
 		sqlDeleteReAluguel=sqlDeleteReAluguel.concat(Integer.toString(idFilme));
         PreparedStatement DeleteRe = conn.prepareStatement(sqlDeleteReAluguel);
         DeleteRe.execute();
@@ -102,7 +105,7 @@ public class FilmeDAOImpl implements FilmeDAO {
         ps.execute();
 
         conn.commit();
-		
+		System.out.println("\nExclusão realizada com sucesso.\n");
 	}
 
 	@Override
@@ -120,7 +123,7 @@ public class FilmeDAOImpl implements FilmeDAO {
         }
 
         String nome = myRs.getString("nome");
-        Date dataLancamento = myRs.getDate("dataLancamento");
+        Date dataLancamento = myRs.getDate("data_lancamento");
         String descricao=myRs.getString("descricao");
         return new Filme(idFilme,dataLancamento,nome,descricao);
 	}
@@ -129,7 +132,7 @@ public class FilmeDAOImpl implements FilmeDAO {
 	@Override
 	public Collection<Filme> list(Connection conn) throws Exception {
 		
-		String sql = "select * from en_filme order by nome";
+		String sql = "select * from en_filme order by id_filme";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet resultLista = ps.executeQuery();
 
@@ -138,7 +141,7 @@ public class FilmeDAOImpl implements FilmeDAO {
         while (resultLista.next()) {
             Integer idFilme = resultLista.getInt("id_filme");
             String nome = resultLista.getString("nome");
-            Date dataLancamento = resultLista.getDate("dataLancamento");
+            Date dataLancamento = resultLista.getDate("data_lancamento");
             String descricao=resultLista.getString("descricao");
 
             items.add(new Filme(idFilme, dataLancamento,nome,descricao));

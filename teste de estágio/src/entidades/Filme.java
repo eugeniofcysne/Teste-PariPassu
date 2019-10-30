@@ -58,9 +58,9 @@ public class Filme {
     
     @Override
     public String toString() {
-    	return "\nidFilme: " + this.idFilme + ", \nData Lançamento: " + this.dataLancamento +
-                ", \nNome: " + this.nome + ", \ndescrição: " + this.descricao +
-                ", \n";
+    	return "\nidFilme: " + this.idFilme + " \nData Lançamento: " + this.dataLancamento +
+                " \nNome: " + this.nome + " \ndescrição: " + this.descricao +
+                " \n";
     }
     
 

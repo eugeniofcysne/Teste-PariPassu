@@ -1,4 +1,5 @@
-1) Não desenvolvida a parte do Cliente na aplicação / Main, pois não foi solicitado no teste.
+1) Não desenvolvida a parte do Cliente na aplicação / Main, pois não foi solicitado no Teste.
 2) Não realizado tratamento de erros para entradas de insert no banco, por exemplo Data de Lançamento (dd/mm/yyyy) e valor (float).
 3) Foram criados alguns métodos nas classes para evitar repetição de código (por exemplo insereReAluguel e criaListaAluguel na classe AluguelDAO, e os métodos toString no Aluguel e no Filme)
 4) Foi alterado o método list de Collection<Filme> para Collection<Aluguel> na classe AluguelDAO
+5) Alguns métodos possuem os inputs de informações no Main (por exemplo Inserir) e outros tem os inputs de informação na classe DAO (por exemplo Editar). Isto porque o Inserir tem como parâmetro um Filme/Aluguel (preciso construir o objeto inteiro no Main para passar como parâmetro), enquanto no Editar tem como parâmetro o idFilme / idAluguel. O ideal seria passar como parâmetro no método Inserir também apenas o id, porém decidiu-se não alterar o que estava posto no Teste.

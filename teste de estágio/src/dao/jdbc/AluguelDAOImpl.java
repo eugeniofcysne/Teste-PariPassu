@@ -103,7 +103,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 			}
 			contadorDeFilmes++;
 			Scanner scanner2 = new Scanner(System.in);
-			System.out.println("Deseja inserir novo filme? digite 0 para sim, ou qualquer outra coisa para não");
+			System.out.println("Deseja inserir novo filme? digite 0 para sim, ou 1 para não");
 			if (scanner2.nextInt() == 0) {
 				System.out.println("Ok! Nova inserção. \n");
 			} else {
@@ -136,7 +136,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 	public void delete(Connection conn, Aluguel aluguel) throws Exception {
 		Integer idAluguel = aluguel.getIdAluguel();
 
-		String sqlDeleteReAluguel = "delete from en_re_aluguel_filme where id_aluguel = ";
+		String sqlDeleteReAluguel = "delete from re_aluguel_filme where id_aluguel = ";
 		sqlDeleteReAluguel = sqlDeleteReAluguel.concat(Integer.toString(idAluguel));
         PreparedStatement deleteRe = conn.prepareStatement(sqlDeleteReAluguel);
         deleteRe.execute();
@@ -147,15 +147,15 @@ public class AluguelDAOImpl implements AluguelDAO {
         deleteAluguel.execute();
         conn.commit();
         
-        System.out.println("Aluguel id "+ Integer.toString(idAluguel) + " exluído com sucesso. \n");
+        System.out.println("Aluguel id "+ Integer.toString(idAluguel) + " exlcuído com sucesso. \n");
 	}
 
 	@Override
 	public Aluguel find(Connection conn, Integer idAluguel) throws Exception {
 		//montando a string sql
-		String sql = "select a.id_cliente, a.id_aluguel, a.data_aluguel, a.valor, b.nome  from en_aluguel a, en_cliente b where a.id_cliente = b.id_cliente and a.id_aluguel = ";
+		String sql = "select * from en_aluguel where id_aluguel = ";
 		sql=sql.concat(Integer.toString(idAluguel));
-		System.out.println(sql);
+
 	    PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet myRs = ps.executeQuery();
 
@@ -164,14 +164,25 @@ public class AluguelDAOImpl implements AluguelDAO {
         }else {
 
 	        Integer idCliente = myRs.getInt("id_cliente");
-	        String nome = myRs.getString("nome_cliente");
-	        Cliente cliente = new Cliente(idCliente, nome);
 	        
 	        Date dataAluguel = myRs.getDate("data_aluguel");
-	        Float valor=myRs.getFloat("valor");                  
-	        List<Filme> filmes = filmesDoAluguel(conn, idAluguel);     
-               
-	        return new Aluguel(idAluguel,filmes,cliente,dataAluguel,valor);
+	        Float valor=myRs.getFloat("valor");           
+	        
+	        String pegaCliente = "select a.nome from en_cliente a, en_aluguel b where a.id_cliente = b.id_cliente and b.id_cliente = ";
+	        pegaCliente=pegaCliente.concat(Integer.toString(idCliente));
+	        
+		    PreparedStatement ps2 = conn.prepareStatement(pegaCliente);
+	        ResultSet myRs2 = ps2.executeQuery();
+	        if (!myRs2.next()) {
+	            return null;
+	        }else {	        
+		        String nome = myRs2.getString("nome");
+		        Cliente cliente = new Cliente(idCliente, nome);
+
+		        List<Filme> filmes = filmesDoAluguel(conn, idAluguel);     
+	               
+		        return new Aluguel(idAluguel,filmes,cliente,dataAluguel,valor);
+	        }
 	        
         }
 	}
@@ -197,7 +208,7 @@ public class AluguelDAOImpl implements AluguelDAO {
 	        ResultSet resultNomeCliente = pegaNomeCliente.executeQuery();
 	        String nome=null;
 	        while(resultNomeCliente.next()) {
-	        	nome=resultNomeCliente.getString("b.nome");
+	        	nome=resultNomeCliente.getString("nome");
 	        }
             Cliente cliente = new Cliente(idCliente, nome);
             items.add(new Aluguel(idAluguel, filmesDoAluguel(conn, idAluguel),cliente,dataAluguel,valor));
@@ -231,8 +242,10 @@ public class AluguelDAOImpl implements AluguelDAO {
 		return items;
 	}
 	
-	public List<Filme> filmesDoAluguel(Connection conn, Integer idAluguel) throws Exception{// método criado para economizar código, este bloco aparece mais de 1x
-		String sqlPegaFilmes="select * from re_aluguel_filme where id_aluguel = ";
+	// método criado para economizar código, este bloco aparece mais de 1x
+	public List<Filme> filmesDoAluguel(Connection conn, Integer idAluguel) throws Exception{
+		String sqlPegaFilmes="select a.id_filme, a.nome, a.data_lancamento, a.descricao from en_filme a,"
+				+"re_aluguel_filme b where a.id_filme = b.id_filme and b.id_aluguel = ";
         sqlPegaFilmes=sqlPegaFilmes.concat((Integer.toString(idAluguel)));
         PreparedStatement pegaFilmes=conn.prepareStatement(sqlPegaFilmes);
         ResultSet filmesDoAluguel = pegaFilmes.executeQuery();
